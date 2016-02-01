@@ -76,6 +76,21 @@ object Utiltity {
     vec
   }
 
+  /** This method does element wise division of two vectors and return the resultant vector
+    *
+    * @param a - A vector[Double]
+    * @param b - A vector[Double]
+    * @return -  A Vector[Double]
+    */
+  def divideVectors(a: Vector[Double], b: Vector[Double]): Vector[Double] = {
+    var vec: Vector[Double] = Vector()
+    assert(a.size == b.size)
+    for (i <- a.indices) {
+      vec = vec :+ (a(i) / b(i))
+    }
+    vec
+  }
+
   /** This method calculates the euclidean distance between two vectors.
     *
     * @param point1 - first vector.
@@ -185,7 +200,7 @@ object Utiltity {
   def scaleData(data: Vector[Vector[Double]], method: String = "Z-score", axis: Int = 0, with_mean: Boolean = true, with_std: Boolean = true): Vector[Vector[Double]] = {
     var scaledData = Vector[Vector[Double]]()
     var mean =  Vector[Double]()
-    var stdev = 0.0
+    var stdev = Vector[Double]()
     var centeredData = data
     var min = 0.0
     var max = 0.0
@@ -200,7 +215,7 @@ object Utiltity {
               println("Centering the data")
               centeredData = centerDataSampleWise(data, mean)
             }
-            scaledData = centeredData map (vec => {for (x <- vec) yield x/stdev })
+            for (i <- centeredData.indices) scaledData = scaledData :+ (centeredData(i) map (x => x/stdev(i)))
           } else if(axis == 0) {
             /** standardize each feature */
             mean = featureMean(data)
@@ -209,7 +224,7 @@ object Utiltity {
               println("Centering the data")
               centeredData = centerDataFeatureWise(data, mean)
             }
-            scaledData = centeredData map (vec => {for (x <- vec) yield x/stdev })
+            scaledData = centeredData map(x => divideVectors(x, stdev))
           } else throw new InvalidParameterException(s"$axis is invalid choice for axis. axis can be 0 or 1.")
         case "min-max" => println("Performing min-max scaling on data.")
           if (axis == 1) {
