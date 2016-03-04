@@ -12,7 +12,7 @@ import scala.util.control.Breaks
   * Created by raghvendra.singh on 1/13/16.
   */
 object Utility {
-  val punctuationList = mutable.HashSet('.',',',':',';',''','%','$','#','*','&','+','-','@','!','(',')','{','}','[',']','_','?','<','>','|','/','\\')
+  val punctuationList = mutable.HashSet('.',',',':',';',''','%','$','#','*','&','+','-','@','!','(',')','{','}','[',']','_','?','<','>','|','/')
 
   /** This function returns a list of only those words which do not contain any element present in punctuationList or any digit
     *
