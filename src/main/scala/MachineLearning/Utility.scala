@@ -158,6 +158,7 @@ object Utility {
     sum
   }
 
+
   /** This method calculates the mean of each sample and returns a Vector of all the sample means
     *
     * @param data - A Vector[Vector[Double] ] where each internal Vector is a data sample.
@@ -218,12 +219,24 @@ object Utility {
     stdDev
   }
 
+  /** This method does element wise subtraction of two lists and returns the resultant list
+    *
+    * @param a - A List[Double]
+    * @param b - A List[Double]
+    * @return -  A List[Double]
+    */
   def subtractLists(a: List[Double], b: List[Double]): List[Double] = {
     var result = ListBuffer[Double]()
     for (i <- a.indices) result = result :+ (a(i) - b(i))
     result.toList
   }
 
+  /** This method multiplies a scalar to each element of the list and returns the resultant list
+    *
+    * @param lis - A List[Double]
+    * @param const - A scalar
+    * @return -  A List[Double]
+    */
   def multiplyScalarToList(lis: List[Double], const: Double): List[Double] = {
     var result = ListBuffer[Double]()
     for (i <- lis.indices) {
@@ -232,6 +245,12 @@ object Utility {
     result.toList
   }
 
+  /** This method does element wise addition of two lists and return the resultant list
+    *
+    * @param a - A List[Double]
+    * @param b - A List[Double]
+    * @return -  A List[Double]
+    */
   def addLists(a: List[Double], b: List[Double]): List[Double] = {
     assert(a.size == b.size)
     var result = ListBuffer[Double]()
@@ -240,6 +259,12 @@ object Utility {
   }
 
 
+  /** This method subtracts the mean value of each sample from each element of the corresponding sample
+    *
+    * @param data - A vector of all samples.
+    * @param mean - A vector which contains mean of each sample in the data.
+    * @return - centered data.
+    */
   def centerDataSampleWise(data: Vector[Vector[Double]], mean: Vector[Double]): Vector[Vector[Double]] = {
     var centeredData = Vector[Vector[Double]]()
     try {
@@ -251,7 +276,12 @@ object Utility {
     centeredData
   }
 
-
+  /** This method subtracts the mean value of each feature from each element of the corresponding feature
+    *
+    * @param data - A vector of all samples.
+    * @param mean - A vector which contains mean of each feature in the data.
+    * @return - centered data.
+    */
   def centerDataFeatureWise(data: Vector[Vector[Double]], mean: Vector[Double]): Vector[Vector[Double]] = {
     var centeredData = Vector[Vector[Double]]()
     try {
@@ -263,7 +293,11 @@ object Utility {
     centeredData
   }
 
-
+  /** This method calculates minimum and maximum value inside each feature in the data
+    *
+    * @param data - A vector of all samples.
+    * @return - A list buffer of tuple containing minimum and maximum value inside each feature.
+    */
   private def findMinMaxFeatureWise(data: Vector[Vector[Double]]): ListBuffer[(Double,Double)] = {
     val res = ListBuffer.fill(data(0).size)((Double.MaxValue, Double.MinValue))
     for (i <- data.indices) {
@@ -273,6 +307,19 @@ object Utility {
       }
     }
     res
+  }
+
+  /** This method calculates the dot product of two lists
+    *
+    * @param a - first list
+    * @param b - second list
+    * @return - returns the scalar value which is the dot product of two lists.
+    */
+  def dotProductLists(a: List[Double], b: List[Double]): Double = {
+    assert(a.size == b.size)
+    var result = 0.0
+    for (i <- a.indices) result = result + a(i) * b(i)
+    result
   }
 
 
