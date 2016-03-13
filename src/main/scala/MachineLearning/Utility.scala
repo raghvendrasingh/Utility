@@ -90,6 +90,25 @@ object Utility {
     }
     sampleData
   }
+  
+  
+  /** This method loads data from a CSV file into DenseMatrix. Each row of CSV is a data sample. */
+  def loadDenseMatrixFromCSV(fileName: String, delimiter: String): DenseMatrix[Double] = {
+    var res: DenseMatrix[Double] = null
+    var arr = Array[Double]()
+    try {
+      var numSamples = 0
+      for (line <- Source.fromFile(fileName).getLines) {
+        arr = arr ++ line.split(delimiter).map (x => x.toDouble)
+        if (numSamples == 0) numSamples = arr.size
+      }
+      res = new DenseMatrix(numSamples,arr,0)
+    } catch {
+      case ex: Exception => println("Unexpected execution error while executing method loadDenseMatrixFromCSV()",ex)
+    }
+    res
+  }
+
 
   /** This method does element wise addition of two vectors and return the resultant vector
     *
