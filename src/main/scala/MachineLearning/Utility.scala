@@ -21,6 +21,7 @@ object Utility {
     */
   def getValidWordList(wordList: List[String]): List[String] = {
     var result = List[String]()
+    val punctuationList = mutable.HashSet('.',',',':',';',''','%','$','#','*','&','+','-','@','!','(',')','{','}','[',']','_','?','<','>','|','/','\\')
     val loop = new Breaks
     try {
       for (word <- wordList) {
