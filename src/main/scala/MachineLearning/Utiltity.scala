@@ -1,9 +1,9 @@
 package MachineLearning
 
-//import breeze.linalg._
+import breeze.linalg.DenseMatrix
 import java.io.FileNotFoundException
 import java.security.InvalidParameterException
-
+import scala.io.Source
 import scala.collection.mutable.ListBuffer
 
 /**
@@ -43,6 +43,23 @@ object Utiltity {
       if (bufferedSource != null) bufferedSource.close()
     }
     sampleData
+  }
+
+  /** This method loads data from a CSV file into DenseMatrix. Each row of CSV is a data sample. */
+  def loadDenseMatrixFromCSV(fileName: String, delimiter: String): DenseMatrix[Double] = {
+    var res: DenseMatrix[Double] = null
+    var arr = Array[Double]()
+    try {
+      var numSamples = 0
+      for (line <- Source.fromFile(fileName).getLines) {
+        arr = arr ++ line.split(delimiter).map (x => x.toDouble)
+        if (numSamples == 0) numSamples = arr.size
+      }
+      res = new DenseMatrix(numSamples,arr,0)
+    } catch {
+      case ex: Exception => println("Unexpected execution error while executing method loadDenseMatrixFromCSV()",ex)
+    }
+    res
   }
 
   /** This method does element wise addition of two vectors and return the resultant vector
@@ -112,10 +129,12 @@ object Utiltity {
     sum
   }
 
+  /** This method calculates the mean of each sample in data. */
   def sampleMean(data: Vector[Vector[Double]]): Vector[Double] = {
     data map (vec => {vec.sum/vec.size})
   }
 
+  /** This method calculates the standard deviation of each sample in data. */
   def sampleStandardDeviation(data: Vector[Vector[Double]], mean: Vector[Double]): Vector[Double] = {
     assert(data.size == mean.size)
     var stdDev = Vector[Double]()
@@ -131,12 +150,14 @@ object Utiltity {
     stdDev
   }
 
+  /** This method calculates the mean of each feature in data. */
   def featureMean(data: Vector[Vector[Double]]): Vector[Double] = {
     val sum = data reduceLeft((x,y)=> addVectors(x,y))
     val mean = sum map (x => x/data.size)
     mean
   }
 
+  /** This method calculates the standard deviation of each feature in data. */
   def featureStandardDeviation(data: Vector[Vector[Double]], mean: Vector[Double]): Vector[Double] = {
     assert(data(0).size == mean.size)
     var stdDev = Vector[Double]()
@@ -150,7 +171,7 @@ object Utiltity {
     stdDev
   }
 
-
+  /** This method subtracts the sample mean from each element in the sample. */
   def centerDataSampleWise(data: Vector[Vector[Double]], mean: Vector[Double]): Vector[Vector[Double]] = {
     var centeredData = Vector[Vector[Double]]()
     try {
@@ -162,7 +183,7 @@ object Utiltity {
     centeredData
   }
 
-
+  /** This method subtracts the feature mean from each element in the feature. */
   def centerDataFeatureWise(data: Vector[Vector[Double]], mean: Vector[Double]): Vector[Vector[Double]] = {
     var centeredData = Vector[Vector[Double]]()
     try {
@@ -174,7 +195,7 @@ object Utiltity {
     centeredData
   }
 
-
+  /** This method finds the minimum and maximum value inside each feature. */
   private def findMinMaxFeatureWise(data: Vector[Vector[Double]]): ListBuffer[(Double,Double)] = {
     val res = ListBuffer.fill(data(0).size)((Double.MaxValue, Double.MinValue))
     for (i <- data.indices) {
