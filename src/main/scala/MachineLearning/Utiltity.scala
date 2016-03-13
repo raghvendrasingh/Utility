@@ -10,6 +10,38 @@ import scala.collection.mutable.ListBuffer
   * Created by raghvendra.singh on 1/13/16.
   */
 object Utiltity {
+ 
+   val punctuationList = mutable.HashSet('.',',',':',';',''','%','$','#','*','&','+','-','@','!','(',')','{','}','[',']','_','?','<','>','|','/','\\')
+  /** This function returns a list of only those words which do not contain any element present in punctuationList or any digit
+    *
+    * @param wordList - A list of words.
+    * @return - A list of words without any any element present in punctuationList or any digit.
+    */
+  def getValidWordList(wordList: List[String]): List[String] = {
+    var result = List[String]()
+    val loop = new Breaks
+    try {
+      for (word <- wordList) {
+        var flag = false
+        loop.breakable {
+          for (char <- word) {
+            if (punctuationList.contains(char) || char.isDigit) {
+              flag = true
+              loop.break()
+            }
+          }
+        }
+        if (!flag) result = result :+ word
+      }
+      result
+    } catch {
+      case ex: Exception => {
+        println("Unexpected execution error while executing method getValidWordList()", ex)
+        throw ex
+      }
+    }
+  }
+
 
   /** This method checks whether a string is null or empty
     *
