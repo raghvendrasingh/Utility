@@ -2,7 +2,7 @@ package MachineLearning
 
 import scala.collection.mutable
 import scala.util.Random
-import java.io.FileNotFoundException
+import java.io.{ObjectOutputStream, FileOutputStream, FileNotFoundException}
 import java.security.InvalidParameterException
 
 import scala.collection.mutable.ListBuffer
@@ -41,6 +41,28 @@ object Utility {
         println("Unexpected execution error while executing method getValidWordList()", ex)
         throw ex
       }
+    }
+  }
+
+  /** This method serializes and then saves the object into a file
+    *
+    * @param obj - Object to be serialized and saved.
+    * @param fileName - File name of the file in which this object is to be saved.
+    */
+
+  def saveObject(obj: Object, fileName: String): Unit = {
+    var fos: FileOutputStream = null
+    var oos: ObjectOutputStream = null
+    try {
+      fos = new FileOutputStream(fileName)
+      oos = new ObjectOutputStream(fos)
+      oos.writeObject(obj)
+    } catch {
+      case ex: Exception => println(s"Unexpected execution error while executing method saveVocab()",ex)
+        throw ex
+    } finally {
+      if (fos != null) fos.close()
+      if (oos != null) oos.close()
     }
   }
 
@@ -319,6 +341,21 @@ object Utility {
     assert(a.size == b.size)
     var result = 0.0
     for (i <- a.indices) result = result + a(i) * b(i)
+    BigDecimal(result).setScale(5, BigDecimal.RoundingMode.HALF_UP).toDouble
+  }
+
+  /** This method divides each element of list a by its corresponding element in list b
+    *
+    * @param a - first list
+    * @param b - second list
+    * @return - returns a list in which each element is a result of division of element from list a and its
+    *         corresponding element from list b.
+    */
+  def divideListsElementWise(a: List[Double], b: List[Double]): List[Double] = {
+    var result = List[Double]()
+    assert(a.size == b.size)
+    /** 0.000001 is added to avoid divide by zero error */
+    for (i <- a.indices) result = result :+ (a(i)/(b(i) + 0.000001))
     result
   }
 
